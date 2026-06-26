@@ -8,9 +8,9 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build & Test') {
             steps {
-                echo 'Repository cloned successfully.'
+                sh 'mvn clean test'
             }
         }
     }
