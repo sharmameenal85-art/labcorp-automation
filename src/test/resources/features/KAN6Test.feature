@@ -1,61 +1,59 @@
-```
-Feature: KAN-6 - Sprint agent - Validate UI elements on main page
+Feature: KAN-6 Sprint agent - Validate UI elements on main page
 
-  @KAN-6 @smoke @regression
-  Scenario: Validate all main page UI elements load correctly
-    Given the main page is open
-    When all UI elements such as headers, footers, buttons, and labels are checked for visibility
-    Then all UI elements should be visible and correctly formatted on the main page
+  @KAN-6 @happy_path @smoke
+  Scenario: Verify all UI elements load on the main page
+    Given I navigate to the main page
+    When I check for the presence of all expected UI elements
+    Then all UI elements should be visible as expected
 
-  @KAN-6 @smoke @regression
-  Scenario: Verify behavior with invalid input in text fields
-    Given the main page is open
-    When invalid characters are entered into input fields
-    And the fields are submitted or interacted with
-    Then validation error messages should be displayed and invalid input should not be accepted
+  @KAN-6 @happy_path @regression
+  Scenario: Ensure primary button is functional
+    Given I navigate to the main page
+    When I click on the primary button
+    Then the appropriate response or navigation should occur
 
-  @KAN-6 @smoke @regression
-  Scenario: Test input field boundary with maximum allowable characters
-    Given the main page is open
-    When maximum allowed characters are entered into an input field
-    And the input is submitted
-    Then application should accept the input and handle it correctly without errors
+  @KAN-6 @negative_test @regression
+  Scenario: Check UI response to missing or corrupted elements
+    Given I navigate to the main page with missing UI elements
+    When I observe the behavior of the UI
+    Then an error or fallback message should be rendered gracefully
 
-  @KAN-6 @smoke @regression
-  Scenario: Test input field boundary with minimum allowable characters
-    Given the main page is open
-    When minimum required characters are entered into an input field
-    And the input is submitted
-    Then application should accept the input and process it correctly
+  @KAN-6 @negative_test @regression
+  Scenario: Verify error message for invalid input
+    Given I navigate to the main page
+    When I enter invalid input in any available fields
+    And I submit the form
+    Then an appropriate error message should be displayed for invalid input
 
-  @KAN-6 @smoke @regression
-  Scenario: Verify SQL injection protection
-    Given the main page is open
-    When SQL injection scripts are entered into input fields
-    And the input is submitted
-    Then application should sanitize input and reject potential SQL injection attempts
+  @KAN-6 @boundary_test @regression
+  Scenario: Test UI element limits with maximum input
+    Given I navigate to the main page
+    When I enter maximum allowed input in text fields
+    And I submit the form
+    Then the form should process the input correctly without errors
 
-  @KAN-6 @smoke @regression
-  Scenario: Check unauthorized access to main page
-    When an attempt is made to access the main page without proper authentication
-    Then access should be denied and the user should be redirected to the login page
+  @KAN-6 @boundary_test @regression
+  Scenario: Test UI element limits with minimum input
+    Given I navigate to the main page
+    When I enter minimum allowable input in text fields
+    And I submit the form
+    Then the form should process the input correctly or prompt for more data
 
-  @KAN-6 @smoke @regression
-  Scenario: Ensure user session management is secure
-    Given the main page is open
-    When signed in with valid credentials
-    And logged out
-    Then user should be redirected to the login page after logout, preventing unauthorized access
+  @KAN-6 @security_test @regression
+  Scenario: Validate user authentication requirements on the main page
+    Given I attempt to access the main page without authentication
+    When I observe the response
+    Then the page should prompt for authentication or deny access
 
-  @KAN-6 @smoke @regression
-  Scenario: Check all button labels on the main page
-    Given the main page is open
-    When all buttons are checked for correct labels as per the design specifications
-    Then all button labels should be correct and match the design documentation
+  @KAN-6 @security_test @regression
+  Scenario: Test for SQL injection vulnerabilities
+    Given I navigate to the main page
+    When I enter a SQL injection string in input fields
+    And I submit the form
+    Then the input should be sanitized and no data breach or unexpected behavior should occur
 
-  @KAN-6 @smoke @regression
-  Scenario: Verify layout consistency across devices
-    Given the main page is open on various devices/browsers
-    When the layout is checked for consistency and responsiveness
-    Then UI should display consistently across devices and maintain responsiveness
-```
+  @KAN-6 @security_test @regression
+  Scenario: Check for unauthorized access controls
+    Given I attempt to perform actions restricted to admin users
+    When I verify the response
+    Then the system should restrict actions, confirming that only authorized users can perform them
