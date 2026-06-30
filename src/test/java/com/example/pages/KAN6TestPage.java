@@ -1,6 +1,8 @@
+```java
 package com.example.pages;
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
@@ -9,77 +11,52 @@ import org.junit.jupiter.api.*;
 
 public class KAN6TestPage {
 
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private final String baseUrl = "http://localhost:3000";
+    private WebDriver driver = new ChromeDriver();
+    private WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-    // By locators
-    private By allUIElementsLocator = By.cssSelector(".ui-element"); //TODO: Verify this locator
-    private By primaryButtonLocator = By.id("primary-button"); //TODO: Verify this locator
-    private By errorOutputLocator = By.id("error-message"); //TODO: Verify this locator
-    private By submitButtonLocator = By.id("submit-button"); //TODO: Verify this locator
+    private By headerLocator = By.id("header"); // TODO: Verify the real selector
+    private By footerLocator = By.id("footer"); // TODO: Verify the real selector
+    private By searchBarLocator = By.id("search-bar"); // TODO: Verify the real selector
+    private By mainContentLocator = By.id("main-content"); // TODO: Verify the real selector
 
-    public KAN6TestPage(WebDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    public KAN6TestPage() {
+        driver.get("http://localhost:3000");
     }
 
+    @Given("the user navigates to the main page")
     public void navigateToMainPage() {
-        driver.get(baseUrl);
+        // Navigation is handled in the constructor
     }
 
-    public void verifyAllUIElementsVisible() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(allUIElementsLocator));
+    @Then("the header should be displayed")
+    public void verifyHeaderDisplayed() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(headerLocator));
+        Assertions.assertTrue(driver.findElement(headerLocator).isDisplayed(), "Header is not displayed");
     }
 
-    public void clickPrimaryButton() {
-        driver.findElement(primaryButtonLocator).click();
+    @Then("the footer should be displayed")
+    public void verifyFooterDisplayed() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(footerLocator));
+        Assertions.assertTrue(driver.findElement(footerLocator).isDisplayed(), "Footer is not displayed");
     }
 
-    public String checkForErrorMessage() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(errorOutputLocator)).getText();
+    @Then("the search bar should be displayed")
+    public void verifySearchBarDisplayed() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(searchBarLocator));
+        Assertions.assertTrue(driver.findElement(searchBarLocator).isDisplayed(), "Search bar is not displayed");
     }
 
-    public void enterTextInField(By fieldLocator, String text) {
-        WebElement field = driver.findElement(fieldLocator);
-        field.clear();
-        field.sendKeys(text);
+    @Then("the main content area should be displayed")
+    public void verifyMainContentDisplayed() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(mainContentLocator));
+        Assertions.assertTrue(driver.findElement(mainContentLocator).isDisplayed(), "Main content area is not displayed");
     }
 
-    public void submitForm() {
-        driver.findElement(submitButtonLocator).click();
-    }
-    
-    // Additional methods for each specific test case
-
-    public void verifyMissingElementsFallback() {
-        // Logic to test the UI response to missing/corrupted elements
-    }
-
-    public void verifyErrorMessageForInvalidInput() {
-        // Verify appropriate error message for invalid input
-    }
-
-    public void testMaximumInputLimits(By fieldLocator, String maxInput) {
-        enterTextInField(fieldLocator, maxInput);
-        submitForm();
-    }
-
-    public void testMinimumInputLimits(By fieldLocator, String minInput) {
-        enterTextInField(fieldLocator, minInput);
-        submitForm();
-    }
-
-    public void validateUserAuthenticationRequirements() {
-        // Logic to test user authentication
-    }
-
-    public void testSQLInjectionVulnerabilities(By inputFieldLocator, String sqlInjectionString) {
-        enterTextInField(inputFieldLocator, sqlInjectionString);
-        submitForm();
-    }
-
-    public void checkUnauthorizedAccessControls(By adminActionLocator) {
-        // Logic to test unauthorized access to admin functions
+    @AfterEach
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
     }
 }
+```
